@@ -2,9 +2,9 @@
 % one free cell (F) and one foundation pile (G).
 
 % G for Goal [n,n-1,...,1]
-% F for Free Cell [n]
+% F for Free Cell [m]
 % A for Lane A [a_1,...,a_k]
-% B for Lane B [b_1,...,b_k]
+% B for Lane B [b_1,...,b_l]
 
 % done
 f(_,[],[],[]).
