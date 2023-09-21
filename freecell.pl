@@ -2,8 +2,9 @@
 % one free cell (F) and one foundation pile (G).
 
 % example:
-% ?- fc([2,1],[3,4],S).
-% S = ["2 from A to B", '1 from A to G', "2 from B to G", "3 from B to G", "4 from B to G"]
+% ?- fc([2,1],[4,3],S).
+% S = ["2 from A to F", '1 from A to G', "2 from F to G",
+%      "4 from B to F", "3 from B to G", "4 from F to G"].
 
 fc(A,B,S) :-
     f([],[],A,B,S).
