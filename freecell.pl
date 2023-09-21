@@ -41,18 +41,18 @@ f([], F, A, [1|Bs], [Step|S]) :-
 f([G|Gs], [F], A, B, [Step|S]) :-
     F =:= G + 1,
     step_str(F, 'F', 'G', Step),
-    f([F,G|Gs], [], A, B, S).
+    f([F,G|Gs], [], A, B, S),!.
 
 % lanes to goal
 f([G|Gs], F, [A|As], B, [Step|S]) :-
     A =:= G + 1,
     step_str(A, 'A', 'G', Step),
-    f([A,G|Gs], F, As, B, S).
+    f([A,G|Gs], F, As, B, S),!.
 
 f([G|Gs], F, A, [B|Bs], [Step|S]) :-
     B =:= G + 1,
     step_str(B, 'B', 'G', Step),
-    f([B,G|Gs], F, A, Bs, S).
+    f([B,G|Gs], F, A, Bs, S),!.
 
 % free cell to lanes
 f(G, [F], [A|As], B, [Step|S]) :-
