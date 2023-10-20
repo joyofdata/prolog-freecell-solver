@@ -21,62 +21,62 @@ step_str(Val, From, To, Str) :-
 f(_,[],[],[],[]).
 
 % first goal
-f([], [1|F1s], L1, L2, [Step|S]) :-
-    step_str(1, 'F1', 'G1', Step),
+f([], [1|F1s], L1, L2, [S_|S]) :-
+    step_str(1, 'F1', 'G1', S_),
     f([1], F1s, L1, L2, S).
 
-f([], F1, [1|L1s], L2, [Step|S]) :-
-    step_str(1, 'L1', 'G1', Step),
+f([], F1, [1|L1s], L2, [S_|S]) :-
+    step_str(1, 'L1', 'G1', S_),
     f([1], F1, L1s, L2, S).
 
-f([], F1, L1, [1|L2s], [Step|S]) :-
-    step_str(1, 'L2', 'G1', Step),
+f([], F1, L1, [1|L2s], [S_|S]) :-
+    step_str(1, 'L2', 'G1', S_),
     f([1], F1, L1, L2s, S).
 
 % free cell to goal
-f([G1|G1s], [F1], L1, L2, [Step|S]) :-
+f([G1|G1s], [F1], L1, L2, [S_|S]) :-
     F1 =:= G1 + 1,
-    step_str(F1, 'F1', 'G1', Step),
+    step_str(F1, 'F1', 'G1', S_),
     f([F1,G1|G1s], [], L1, L2, S),!.
 
 % lanes to goal
-f([G1|G1s], F1, [L1|L1s], L2, [Step|S]) :-
+f([G1|G1s], F1, [L1|L1s], L2, [S_|S]) :-
     L1 =:= G1 + 1,
-    step_str(L1, 'L1', 'G1', Step),
+    step_str(L1, 'L1', 'G1', S_),
     f([L1,G1|G1s], F1, L1s, L2, S),!.
 
-f([G1|G1s], F1, L1, [L2|L2s], [Step|S]) :-
+f([G1|G1s], F1, L1, [L2|L2s], [S_|S]) :-
     L2 =:= G1 + 1,
-    step_str(L2, 'L2', 'G1', Step),
+    step_str(L2, 'L2', 'G1', S_),
     f([L2,G1|G1s], F1, L1, L2s, S),!.
 
 % free cell to lanes
-f(G1, [F1], [L1|L1s], L2, [Step|S]) :-
+f(G1, [F1], [L1|L1s], L2, [S_|S]) :-
     F1 + 1 =:= L1,
-    step_str(F1, 'F1', 'L1', Step),
+    step_str(F1, 'F1', 'L1', S_),
     f(G1, [], [F1,L1|L1s], L2, S).
 
-f(G1, [F1], L1, [L2|L2s], [Step|S]) :-
+f(G1, [F1], L1, [L2|L2s], [S_|S]) :-
     F1 + 1 =:= L2,
-    step_str(F1, 'F1', 'L2', Step),
+    step_str(F1, 'F1', 'L2', S_),
     f(G1, [], L1, [F1,L2|L2s], S).
 
 % lane to lane
-f(G1, F1, [L1|L1s], [L2|L2s], [Step|S]) :-
+f(G1, F1, [L1|L1s], [L2|L2s], [S_|S]) :-
     L1 =:= L2 + 1,
-    step_str(L2, 'L2', 'L1', Step),
+    step_str(L2, 'L2', 'L1', S_),
     f(G1, F1, [L2,L1|L1s], L2s, S).
 
-f(G1, F1, [L1|L1s], [L2|L2s], [Step|S]) :-
+f(G1, F1, [L1|L1s], [L2|L2s], [S_|S]) :-
     L2 =:= L1 + 1,
-    step_str(L1, 'L1', 'L2', Step),
+    step_str(L1, 'L1', 'L2', S_),
     f(G1, F1, L1s, [L1,L2|L2s], S).
 
 % lanes to free cell
-f(G1, [], [L1|L1s], L2, [Step|S]) :-
-    step_str(L1, 'L1', 'F1', Step),
+f(G1, [], [L1|L1s], L2, [S_|S]) :-
+    step_str(L1, 'L1', 'F1', S_),
     f(G1, [L1], L1s, L2, S).
 
-f(G1, [], L1, [L2|L2s], [Step|S]) :-
-    step_str(L2, 'L2', 'F1', Step),
+f(G1, [], L1, [L2|L2s], [S_|S]) :-
+    step_str(L2, 'L2', 'F1', S_),
     f(G1, [L2], L1, L2s, S).
