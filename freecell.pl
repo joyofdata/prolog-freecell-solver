@@ -1,18 +1,17 @@
-% Simplified single suit Free Cell with two lanes (A,B), 
+% Simplified single suit Free Cell with two lanes (L1,L2),
 % one free cell (F) and one foundation pile (G).
 
 % example:
 % ?- fc([2,1],[4,3],S).
-% S = ["2 from A to F", '1 from A to G', "2 from F to G",
-%      "4 from B to F", "3 from B to G", "4 from F to G"].
+% S = ['2 from L1 to F', '1 from L1 to G', '2 from F to G', '4 from L2 to F', '3 from L2 to G', '4 from F to G'].
 
-fc(A,B,S) :-
-    f([],[],A,B,S).
+fc(L1,L2,S) :-
+    f([],[],L1,L2,S).
 
 % G for Goal [n,n-1,...,1]
 % F for Free Cell [m]
-% A for Lane A [a_1,...,a_k]
-% B for Lane B [b_1,...,b_l]
+% L1 for Lane 1 [l1_1,...,l1_k]
+% L2 for Lane 2 [l2_1,...,l2_l]
 % S for Solution
 
 step_str(Val, From, To, Str) :-
@@ -20,67 +19,67 @@ step_str(Val, From, To, Str) :-
 
 % done
 % f(
-%   Goal, Free Cell, Lane A, Lane B, Solution)
+%   Goal, Free Cell, Lane 1, Lane 2, Solution)
 % )
 f(_,[],[],[],[]).
 
 % first goal
-f([], [1|Fs], A, B, [Step|S]) :-
+f([], [1|Fs], L1, L2, [Step|S]) :-
     step_str(1, 'F', 'G', Step),
-    f([1], Fs, A, B, S).
+    f([1], Fs, L1, L2, S).
 
-f([], F, [1|As], B, [Step|S]) :-
-    step_str(1, 'A', 'G', Step),
-    f([1], F, As, B, S).
+f([], F, [1|L1s], L2, [Step|S]) :-
+    step_str(1, 'L1', 'G', Step),
+    f([1], F, L1s, L2, S).
 
-f([], F, A, [1|Bs], [Step|S]) :-
-    step_str(1, 'B', 'G', Step),
-    f([1], F, A, Bs, S).
+f([], F, L1, [1|L2s], [Step|S]) :-
+    step_str(1, 'L2', 'G', Step),
+    f([1], F, L1, L2s, S).
 
 % free cell to goal
-f([G|Gs], [F], A, B, [Step|S]) :-
+f([G|Gs], [F], L1, L2, [Step|S]) :-
     F =:= G + 1,
     step_str(F, 'F', 'G', Step),
-    f([F,G|Gs], [], A, B, S),!.
+    f([F,G|Gs], [], L1, L2, S),!.
 
 % lanes to goal
-f([G|Gs], F, [A|As], B, [Step|S]) :-
-    A =:= G + 1,
-    step_str(A, 'A', 'G', Step),
-    f([A,G|Gs], F, As, B, S),!.
+f([G|Gs], F, [L1|L1s], L2, [Step|S]) :-
+    L1 =:= G + 1,
+    step_str(L1, 'L1', 'G', Step),
+    f([L1,G|Gs], F, L1s, L2, S),!.
 
-f([G|Gs], F, A, [B|Bs], [Step|S]) :-
-    B =:= G + 1,
-    step_str(B, 'B', 'G', Step),
-    f([B,G|Gs], F, A, Bs, S),!.
+f([G|Gs], F, L1, [L2|L2s], [Step|S]) :-
+    L2 =:= G + 1,
+    step_str(L2, 'L2', 'G', Step),
+    f([L2,G|Gs], F, L1, L2s, S),!.
 
 % free cell to lanes
-f(G, [F], [A|As], B, [Step|S]) :-
-    F + 1 =:= A,
-    step_str(F, 'F', 'A', Step),
-    f(G, [], [F,A|As], B, S).
+f(G, [F], [L1|L1s], L2, [Step|S]) :-
+    F + 1 =:= L1,
+    step_str(F, 'F', 'L1', Step),
+    f(G, [], [F,L1|L1s], L2, S).
 
-f(G, [F], A, [B|Bs], [Step|S]) :-
-    F + 1 =:= B,
-    step_str(F, 'F', 'B', Step),
-    f(G, [], A, [F,B|Bs], S).
+f(G, [F], L1, [L2|L2s], [Step|S]) :-
+    F + 1 =:= L2,
+    step_str(F, 'F', 'L2', Step),
+    f(G, [], L1, [F,L2|L2s], S).
 
 % lane to lane
-f(G, F, [A|As], [B|Bs], [Step|S]) :-
-    A =:= B + 1,
-    step_str(B, 'B', 'A', Step),
-    f(G, F, [B,A|As], Bs, S).
+f(G, F, [L1|L1s], [L2|L2s], [Step|S]) :-
+    L1 =:= L2 + 1,
+    step_str(L2, 'L2', 'L1', Step),
+    f(G, F, [L2,L1|L1s], L2s, S).
 
-f(G, F, [A|As], [B|Bs], [Step|S]) :-
-    B =:= A + 1,
-    step_str(A, 'A', 'B', Step),
-    f(G, F, As, [A,B|Bs], S).
+f(G, F, [L1|L1s], [L2|L2s], [Step|S]) :-
+    L2 =:= L1 + 1,
+    step_str(L1, 'L1', 'L2', Step),
+    f(G, F, L1s, [L1,L2|L2s], S).
 
 % lanes to free cell
-f(G, [], [A|As], B, [Step|S]) :-
-    step_str(A, 'A', 'F', Step),
-    f(G, [A], As, B, S).
+f(G, [], [L1|L1s], L2, [Step|S]) :-
+    step_str(L1, 'L1', 'F', Step),
+    f(G, [L1], L1s, L2, S).
 
-f(G, [], A, [B|Bs], [Step|S]) :-
-    step_str(B, 'B', 'F', Step),
-    f(G, [B], A, Bs, S).
+f(G, [], L1, [L2|L2s], [Step|S]) :-
+    step_str(L2, 'L2', 'F', Step),
+    f(G, [L2], L1, L2s, S).
