@@ -4,4 +4,3 @@
 - generate rules
 - test suite
 - introduce two goals and colors
-
