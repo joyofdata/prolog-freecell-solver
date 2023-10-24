@@ -5,3 +5,5 @@
 - ~~first test suite~~
 - introduce two colors and four lanes
 - full game
+- switch prolog invocation to pyswip
+- pytest for testing
