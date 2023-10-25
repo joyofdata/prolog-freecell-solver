@@ -2,4 +2,10 @@
 
 rm freecell.pl
 python3 freecell.py > freecell.pl
-python3 test.py
+
+if [ -e freecell.pl ]
+then
+    python3 test.py
+else
+    echo "freecell.pl does not exist."
+fi
