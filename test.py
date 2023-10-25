@@ -7,7 +7,15 @@ def test(fc):
 
     print("Predicate Call: ", pred)
 
-    res = sp.run(['swipl', '-s', 'freecell.pl', '-g', f"{pred},write(S),halt."], capture_output=True, text=True)
+    try:
+        res = sp.run(['swipl', '-s', 'freecell.pl', '-g', f"{pred},write(S),halt."], capture_output=True, text=True, timeout=3)
+    except sp.TimeoutExpired as te:
+        print("FAILED: Timeout")
+        return
+    except Exception as e:
+        print("FAILED: \n", e)
+        return
+
     solution = res.stdout
 
     print("Solution: ", solution)
