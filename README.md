@@ -29,3 +29,13 @@ Solution:  [3:L1-F1,2:L1-F2,1:L1-G1,2:F2-G1,3:F1-G1,5:L2-L1,4:L2-G1,
 5:L2-G2]
 SUCCESS
 ```
+
+# TODOs
+- ~~communicate solution~~ (#2eb054)
+- ~~introduce dummy values for unified handling of empty lanes and goals~~
+- generate rules
+- ~~first test suite~~
+- introduce two colors and four lanes
+- full game
+- switch prolog invocation to pyswip
+- pytest for testing
