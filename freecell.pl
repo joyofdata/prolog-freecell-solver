@@ -391,12 +391,93 @@ f(G1, G2,                               % L3 to L3
     ).
 
 
-% lanes to free cells
-f(G1, G2, [], F2, [L1|L1s], L2, L3, [S_|S], P, P_) :- L1 \= b, \+ member([L1s,L2,L3],P), step_str(L1, 'L1', 'F1', S_), f(G1, G2, [L1], F2, L1s, L2, L3, S, [[L1s,L2,L3]|P], P_).
-f(G1, G2, [], F2, L1, [L2|L2s], L3, [S_|S], P, P_) :- L2 \= b, \+ member([L1,L2s,L3],P), step_str(L2, 'L2', 'F1', S_), f(G1, G2, [L2], F2, L1, L2s, L3, S, [[L1,L2s,L3]|P], P_).
-f(G1, G2, [], F2, L1, L2, [L3|L3s], [S_|S], P, P_) :- L3 \= b, \+ member([L1,L2,L3s],P), step_str(L3, 'L3', 'F1', S_), f(G1, G2, [L3], F2, L1, L2, L3s, S, [[L1,L2,L3s]|P], P_).
-f(G1, G2, F1, [], [L1|L1s], L2, L3, [S_|S], P, P_) :- L1 \= b, \+ member([L1s,L2,L3],P), step_str(L1, 'L1', 'F2', S_), f(G1, G2, F1, [L1], L1s, L2, L3, S, [[L1s,L2,L3]|P], P_).
-f(G1, G2, F1, [], L1, [L2|L2s], L3, [S_|S], P, P_) :- L2 \= b, \+ member([L1,L2s,L3],P), step_str(L2, 'L2', 'F2', S_), f(G1, G2, F1, [L2], L1, L2s, L3, S, [[L1,L2s,L3]|P], P_).
-f(G1, G2, F1, [], L1, L2, [L3|L3s], [S_|S], P, P_) :- L3 \= b, \+ member([L1,L2,L3s],P), step_str(L3, 'L3', 'F2', S_), f(G1, G2, F1, [L3], L1, L2, L3s, S, [[L1,L2,L3s]|P], P_).
+% ==============================================================================
+% lanes to freecells
+% ------------------------------------------------------------------------------
+
+f(G1, G2,
+    [], F2,
+    [L1|L1s], L2, L3,
+    [S_|S], P, P_
+) :-
+    L1 \= b,
+    \+ member([L1s,L2,L3],P),
+    step_str(L1, 'L1', 'F1', S_),
+    f(G1, G2,
+        [L1], F2,
+        L1s, L2, L3,
+        S, [[L1s,L2,L3]|P], P_
+    ).
+
+f(G1, G2,
+    F1, [],
+    [L1|L1s], L2, L3,
+    [S_|S], P, P_
+) :-
+    L1 \= b,
+    \+ member([L1s,L2,L3],P),
+    step_str(L1, 'L1', 'F2', S_),
+    f(G1, G2,
+        F1, [L1],
+        L1s, L2, L3,
+        S, [[L1s,L2,L3]|P], P_
+    ).
+
+f(G1, G2,
+    [], F2,
+    L1, [L2|L2s], L3,
+    [S_|S], P, P_
+) :-
+    L2 \= b,
+    \+ member([L1,L2s,L3],P),
+    step_str(L2, 'L2', 'F1', S_),
+    f(G1, G2,
+        [L2], F2,
+        L1, L2s, L3,
+        S, [[L1,L2s,L3]|P], P_
+    ).
+
+f(G1, G2,
+    F1, [],
+    L1, [L2|L2s], L3,
+    [S_|S], P, P_
+) :-
+    L2 \= b,
+    \+ member([L1,L2s,L3],P),
+    step_str(L2, 'L2', 'F2', S_),
+    f(G1, G2,
+        F1, [L2],
+        L1, L2s, L3,
+        S, [[L1,L2s,L3]|P], P_
+    ).
+
+f(G1, G2,
+    [], F2,
+    L1, L2, [L3|L3s],
+    [S_|S], P, P_
+) :-
+    L3 \= b,
+    \+ member([L1,L2,L3s],P),
+    step_str(L3, 'L3', 'F1', S_),
+    f(G1, G2,
+        [L3], F2,
+        L1, L2, L3s,
+        S, [[L1,L2,L3s]|P], P_
+    ).
+
+f(G1, G2,
+    F1, [],
+    L1, L2, [L3|L3s],
+    [S_|S], P, P_
+) :-
+    L3 \= b,
+    \+ member([L1,L2,L3s],P),
+    step_str(L3, 'L3', 'F2', S_),
+    f(G1, G2,
+        F1, [L3],
+        L1, L2, L3s,
+        S, [[L1,L2,L3s]|P], P_
+    ).
+
 
 
