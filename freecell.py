@@ -47,6 +47,34 @@ def freecells_to_goals(num_goals, num_freecells):
 
     return "\n".join(res)
 
+def lanes_to_goals(num_goals, num_lanes):
+    G = lambda g,i: [f"G{i}",f"[G{g}|G{g}s]"][g==i]
+    L = lambda l,i: [f"L{i}",f"[L{l}|L{l}s]"][l==i]
+    
+    G_ = lambda g,l,i: [f"G{i}",f"[L{l},G{g}|G{g}s]"][g==i]
+    L_ = lambda l,i: [f"L{i}",f"L{l}s"][l==i]
+    
+    res = []
+    for g in range(1,num_goals+1):
+        for l in range(1,num_lanes+1):
+            res0 = f"""
+            f({G(g,1)}, {G(g,2)},                                   % L{l} to G{g}
+                F1, F2, 
+                {L(l,1)}, {L(l,2)}, {L(l,3)}, 
+                [S_|S], P, P_
+            ) :- 
+                L{l} \= b, ((G{g} = b, L{l} = 1); (G{g} \= b, L{l} =:= G{g} + 1)), 
+                step_str(L{l}, 'L{l}', 'G{g}', S_), 
+                f({G_(g,l,1)}, {G_(g,l,2)}, 
+                    F1, F2, 
+                    {L_(l,1)}, {L_(l,2)}, {L_(l,3)}, 
+                    S, [[{L_(l,1)},{L_(l,2)},{L_(l,3)}]|P], P_
+                ),!.
+            """
+            res.append(re.sub("\n            ","\n",res0).lstrip())
+
+    return "\n".join(res)
+
 code = """
 % example:
 % ?- fc([4,1,1],[3,2],[5,4,3,2],S).
@@ -86,13 +114,11 @@ f(_,_,[],[],[b],[b],[b],[],P,P).
 
 <FREECELLS_TO_GOALS>
 
-% lanes to goal
-f([G1|G1s], G2, F1, F2, [L1|L1s], L2, L3, [S_|S], P, P_) :- L1 \= b, ((G1 = b, L1 = 1); (G1 \= b, L1 =:= G1 + 1)), step_str(L1, 'L1', 'G1', S_), f([L1,G1|G1s], G2, F1, F2, L1s, L2, L3, S, [[L1s,L2,L3]|P], P_),!.
-f([G1|G1s], G2, F1, F2, L1, [L2|L2s], L3, [S_|S], P, P_) :- L2 \= b, ((G1 = b, L2 = 1); (G1 \= b, L2 =:= G1 + 1)), step_str(L2, 'L2', 'G1', S_), f([L2,G1|G1s], G2, F1, F2, L1, L2s, L3, S, [[L1,L2s,L3]|P], P_),!.
-f([G1|G1s], G2, F1, F2, L1, L2, [L3|L3s], [S_|S], P, P_) :- L3 \= b, ((G1 = b, L3 = 1); (G1 \= b, L3 =:= G1 + 1)), step_str(L3, 'L3', 'G1', S_), f([L3,G1|G1s], G2, F1, F2, L1, L2, L3s, S, [[L1,L2,L3s]|P], P_),!.
-f(G1, [G2|G2s], F1, F2, [L1|L1s], L2, L3, [S_|S], P, P_) :- L1 \= b, ((G2 = b, L1 = 1); (G2 \= b, L1 =:= G2 + 1)), step_str(L1, 'L1', 'G2', S_), f(G1, [L1,G2|G2s], F1, F2, L1s, L2, L3, S, [[L1s,L2,L3]|P], P_),!.
-f(G1, [G2|G2s], F1, F2, L1, [L2|L2s], L3, [S_|S], P, P_) :- L2 \= b, ((G2 = b, L2 = 1); (G2 \= b, L2 =:= G2 + 1)), step_str(L2, 'L2', 'G2', S_), f(G1, [L2,G2|G2s], F1, F2, L1, L2s, L3, S, [[L1,L2s,L3]|P], P_),!.
-f(G1, [G2|G2s], F1, F2, L1, L2, [L3|L3s], [S_|S], P, P_) :- L3 \= b, ((G2 = b, L3 = 1); (G2 \= b, L3 =:= G2 + 1)), step_str(L3, 'L3', 'G2', S_), f(G1, [L3,G2|G2s], F1, F2, L1, L2, L3s, S, [[L1,L2,L3s]|P], P_),!.
+% ==============================================================================
+% lanes to goals
+% ------------------------------------------------------------------------------
+
+<LANES_TO_GOALS>
 
 % free cells to lanes
 f(G1, G2, [F1], F2, [L1|L1s], L2, L3, [S_|S], P, P_) :- (L1 = b; (L1 \= b, F1 + 1 =:= L1)), \+ member([[F1,L1|L1s],L2,L3],P), step_str(F1, 'F1', 'L1', S_), f(G1, G2, [], F2, [F1,L1|L1s], L2, L3, S, [[[F1,L1|L1s],L2,L3]|P], P_).
@@ -120,9 +146,15 @@ f(G1, G2, F1, [], L1, L2, [L3|L3s], [S_|S], P, P_) :- L3 \= b, \+ member([L1,L2,
 
 """
 
-code = code.replace(
-    "<FREECELLS_TO_GOALS>",
-    freecells_to_goals(num_goals, num_freecells)
+code = (code
+    .replace(
+        "<FREECELLS_TO_GOALS>",
+        freecells_to_goals(num_goals, num_freecells)
+    )
+    .replace(
+        "<LANES_TO_GOALS>",
+        lanes_to_goals(num_goals, num_lanes)
+    )
 )
 
 print(code)
