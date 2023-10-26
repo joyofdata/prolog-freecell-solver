@@ -11,6 +11,8 @@
 
 import re
 
+import itertools as it
+
 
 # not sufficient to configure those numbers.
 # manual editing is still required.
@@ -19,7 +21,14 @@ num_goals = 2
 num_freecells = 2
 
 
-def freecells_to_goals(num_goals, num_freecells):
+def _concise_format(res):
+    """
+    concise formatting (single line) except for the first rule which is pretty printed.
+    """
+    return it.chain([res[0]], map(lambda r: "".join(re.sub(r"%.*","",r).split()).replace(",",", "),res[1:]))
+
+
+def freecells_to_goals(num_goals, num_freecells, concise=True):
     G = lambda g,i: [f"G{i}",f"[G{g}|G{g}s]"][i==g]
     F = lambda f,i: [f"F{i}",f"[F{f}]"][i==f]
 
@@ -45,10 +54,13 @@ def freecells_to_goals(num_goals, num_freecells):
             """
             res.append(re.sub("\n            ","\n",res0).lstrip())
 
+    if concise:
+        res = _concise_format(res)
+
     return "\n".join(res)
 
 
-def lanes_to_goals(num_goals, num_lanes):
+def lanes_to_goals(num_goals, num_lanes, concise=True):
     G = lambda g,i: [f"G{i}",f"[G{g}|G{g}s]"][g==i]
     L = lambda l,i: [f"L{i}",f"[L{l}|L{l}s]"][l==i]
 
@@ -74,10 +86,13 @@ def lanes_to_goals(num_goals, num_lanes):
             """
             res.append(re.sub("\n            ","\n",res0).lstrip())
 
+    if concise:
+        res = _concise_format(res)
+
     return "\n".join(res)
 
 
-def freecells_to_lanes(num_freecells, num_lanes):
+def freecells_to_lanes(num_freecells, num_lanes, concise=True):
     F = lambda f,i: [f"F{i}",f"[F{f}]"][i==f]
     L = lambda l,i: [f"L{i}",f"[L{l}|L{l}s]"][l==i]
 
@@ -104,10 +119,13 @@ def freecells_to_lanes(num_freecells, num_lanes):
             """
             res.append(re.sub("\n            ","\n",res0).lstrip())
 
+    if concise:
+        res = _concise_format(res)
+
     return "\n".join(res)
 
 
-def lanes_to_lanes(num_lanes):
+def lanes_to_lanes(num_lanes, concise=True):
     L = lambda la,lb,i: [f"L{i}",f"[L{i}|L{i}s]"][i in [la,lb]]
 
     def L_(la,lb,i):
@@ -139,10 +157,13 @@ def lanes_to_lanes(num_lanes):
             """
             res.append(re.sub("\n            ","\n",res0).lstrip())
 
+    if concise:
+        res = _concise_format(res)
+
     return "\n".join(res)
 
 
-def lanes_to_freecells(num_lanes, num_freecells):
+def lanes_to_freecells(num_lanes, num_freecells, concise=True):
     L = lambda l,i: [f"L{i}",f"[L{l}|L{l}s]"][l==i]
     F = lambda f,i: [f"F{i}",f"[]"][f==i]
 
@@ -153,7 +174,7 @@ def lanes_to_freecells(num_lanes, num_freecells):
     for l in range(1,num_lanes+1):
         for f in range(1,num_freecells+1):
             res0 = f"""
-            f(G1, G2,
+            f(G1, G2,                           % L{l} to F{f}
                 {F(f,1)}, {F(f,2)},
                 {L(l,1)}, {L(l,2)}, {L(l,3)},
                 [S_|S], P, P_
@@ -168,6 +189,9 @@ def lanes_to_freecells(num_lanes, num_freecells):
                 ).
             """
             res.append(re.sub("\n            ","\n",res0).lstrip())
+
+    if concise:
+        res = _concise_format(res)
 
     return "\n".join(res)
 
