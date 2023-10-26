@@ -1,3 +1,18 @@
+This FreeCell solver is (intended to be) fully declarative, only defining rules
+for legal moves and the final state. Due to Prologs tendency to get stuck in its
+backtracking algorithm it is necessary to keep track of past states to avoid
+repetitive moves. I decided to only keep track of the lanes. That makes sense
+intuitively.
+
+Due to the large number of rules - for example 8 lanes require 8 times 7 rules
+to define all legal moves between lanes I decided to generate the Prolog code
+with Python. The generating Python code is designed such that it is easy to
+modify it from a Prolog programming perspective.
+
+The build process is done by `./build.sh` which executes `freecell.py` for the
+code generation and `test.py` for the testing.
+
+
 ```
 [7,4,1,6,1],[3,5,2],[6,4,3,2],[5,7] represents:
 
