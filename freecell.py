@@ -140,6 +140,9 @@ def lanes_to_lanes(num_lanes, concise=True):
     res = []
     for la in range(1,num_lanes+1):
         for lb in range(1,num_lanes+1):
+            if la == lb:
+                continue
+
             res0 = f"""
             f(G1, G2,                               % L{la} to L{lb}
                 F1, F2,
