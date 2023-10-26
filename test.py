@@ -3,7 +3,7 @@ import subprocess as sp
 
 
 def test(fc):
-    pred = f"fc({str(fc['L1'])}, {str(fc['L2'])}, {str(fc['L3'])}, S)"
+    pred = f"fc({str(fc['L1'])}, {str(fc['L2'])}, {str(fc['L3'])}, {str(fc['L4'])}, S)"
 
     print("Predicate Call: ", pred)
 
@@ -31,10 +31,10 @@ def test(fc):
         assert(val_ == val)
         fc[to].insert(0,val_)
 
-    assert(fc["G1"] == fc["G2"] == [5,4,3,2,1])
+    assert(fc["G1"] == fc["G2"] == [7,6,5,4,3,2,1])
 
     assert(len(fc["F1"]) == len(fc["F2"]) == 0)
-    for i in range(1,4):
+    for i in range(1,5):
         assert(len(fc[f"L{i}"]) == 0)
 
     print("SUCCESS\n")
@@ -43,9 +43,10 @@ def test(fc):
 
 fc = {
     "G1": [], "G2": [], "F1": [], "F2": [],
-    "L1": [4,1,1],
+    "L1": [7,4,1,6,1],
     "L2": [3,5,2],
-    "L3": [5,4,3,2],
+    "L3": [6,4,3,2],
+    "L4": [5,7],
 }
 
 test(fc)
@@ -54,9 +55,10 @@ test(fc)
 
 fc = {
     "G1": [], "G2": [], "F1": [], "F2": [],
-    "L1": [3,2,1],
-    "L2": [5,4,3,2],
+    "L1": [3,2,1,7],
+    "L2": [5,7,4,6,2],
     "L3": [5,4,1],
+    "L4": [6,3],
 }
 
 test(fc)
