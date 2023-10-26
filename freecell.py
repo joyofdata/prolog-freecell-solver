@@ -16,9 +16,9 @@ import itertools as it
 
 # not sufficient to configure those numbers.
 # manual editing is still required.
-num_lanes = 4
-num_goals = 2
-num_freecells = 2
+NUM_LANES = 4
+NUM_GOALS = 2
+NUM_FREECELLS = 2
 
 
 def _concise_format(res):
@@ -258,23 +258,23 @@ f(_,_,[],[],[b],[b],[b],[b],[],P,P).
 code = (code
     .replace(
         "<FREECELLS_TO_GOALS>",
-        freecells_to_goals(num_goals, num_freecells)
+        freecells_to_goals(NUM_GOALS, NUM_FREECELLS)
     )
     .replace(
         "<LANES_TO_GOALS>",
-        lanes_to_goals(num_goals, num_lanes)
+        lanes_to_goals(NUM_GOALS, NUM_LANES)
     )
     .replace(
         "<FREECELLS_TO_LANES>",
-        freecells_to_lanes(num_freecells, num_lanes)
+        freecells_to_lanes(NUM_FREECELLS, NUM_LANES)
     )
     .replace(
         "<LANES_TO_LANES>",
-        lanes_to_lanes(num_lanes)
+        lanes_to_lanes(NUM_LANES)
     )
     .replace(
         "<LANES_TO_FREECELLS>",
-        lanes_to_freecells(num_lanes, num_freecells)
+        lanes_to_freecells(NUM_LANES, NUM_FREECELLS)
     )
 )
 
