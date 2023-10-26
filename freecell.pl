@@ -41,7 +41,7 @@ f([G1|G1s], G2,                                   % F1 to G1
     f([F1,G1|G1s], G2,
         [], F2,
         L1, L2, L3, L4,
-        S, [[L1,L2,L3,L4]|P], P_                     % steps and known states
+        S, [[L1,L2,L3,L4]|P], P_                  % steps and known states
     ),!.
 
 f([G1|G1s], G2, F1, [F2], L1, L2, L3, L4, [S_|S], P, P_):-((G1=b, F2=1);(G1\=b, F2=:=G1+1)), step_str(F2, 'F2', 'G1', S_), f([F2, G1|G1s], G2, F1, [], L1, L2, L3, L4, S, [[L1, L2, L3, L4]|P], P_), !.
@@ -77,14 +77,14 @@ f(G1, [G2|G2s], F1, F2, L1, L2, L3, [L4|L4s], [S_|S], P, P_):-L4\=b, ((G2=b, L4=
 % freecells to lanes
 % ------------------------------------------------------------------------------
 
-f(G1, G2,                               % F1 to L1
+f(G1, G2,                                  % F1 to L1
     [F1], F2,
     [L1|L1s], L2, L3, L4,
     [S_|S], P, P_
 ) :-
-    (L1 = b; (L1 \= b, F1 + 1 =:= L1)), % condition
+    (L1 = b; (L1 \= b, F1 + 1 =:= L1)),    % condition
     \+ member([[F1,L1|L1s],L2,L3,L4],P),   % avoid repeated state
-    step_str(F1, 'F1', 'L1', S_),       % step string
+    step_str(F1, 'F1', 'L1', S_),          % step string
     f(G1, G2,
         [], F2,
         [F1,L1|L1s], L2, L3, L4,
