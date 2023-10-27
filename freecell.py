@@ -44,7 +44,7 @@ def freecells_to_goals(num_goals, num_freecells, concise=True):
                 L1, L2, L3, L4,
                 [S_|S], P, P_
             ) :-
-                ((G{g} = b, F{f} = 1); (G{g} \= b, F{f} =:= G{g} + 1)), % condition
+                can_add_to_goal({g},F{f},G{g}),
                 step_str(F{f}, 'F{f}', 'G{g}', S_),                 % string describing step
                 f({G_(f,g,1)}, {G_(f,g,2)},
                     {F_(f,1)}, {F_(f,2)},
@@ -76,12 +76,12 @@ def lanes_to_goals(num_goals, num_lanes, concise=True):
                 {L(l,1)}, {L(l,2)}, {L(l,3)}, {L(l,4)},
                 [S_|S], P, P_
             ) :-
-                L{l} \= b, ((G{g} = b, L{l} = 1); (G{g} \= b, L{l} =:= G{g} + 1)),
+                can_add_to_goal({g},L{l},G{g}),
                 step_str(L{l}, 'L{l}', 'G{g}', S_),
                 f({G_(g,l,1)}, {G_(g,l,2)},
                     F1, F2,
                     {L_(l,1)}, {L_(l,2)}, {L_(l,3)}, {L_(l,4)},
-                    S, [[{L_(l,1)},{L_(l,2)},{L_(l,3),{L_(l,4)}}]|P], P_
+                    S, [[{L_(l,1)},{L_(l,2)},{L_(l,3)},{L_(l,4)}]|P], P_
                 ),!.
             """
             res.append(re.sub("\n            ","\n",res0).lstrip())
@@ -108,7 +108,7 @@ def freecells_to_lanes(num_freecells, num_lanes, concise=True):
                 {L(l,1)}, {L(l,2)}, {L(l,3)}, {L(l,4)},
                 [S_|S], P, P_
             ) :-
-                (L{l} = b; (L{l} \= b, F{f} + 1 =:= L{l})),    % condition
+                can_add_to_lane(F{f},L{l}),
                 \+ member([{L_(f,l,1)},{L_(f,l,2)},{L_(f,l,3)},{L_(f,l,4)}],P),   % avoid repeated state
                 step_str(F{f}, 'F{f}', 'L{l}', S_),          % step string
                 f(G1, G2,
@@ -149,7 +149,7 @@ def lanes_to_lanes(num_lanes, concise=True):
                 {L(la,lb,1)}, {L(la,lb,2)}, {L(la,lb,3)}, {L(la,lb,4)},
                 [S_|S], P, P_
             ) :-
-                L{la} \= b, (L{lb} = b ; (L{lb} \= b, L{lb} =:= L{la} + 1)),
+                can_add_to_lane(L{la},L{lb}),
                 \+ member([{L_(la,lb,1)},{L_(la,lb,2)},{L_(la,lb,3)},{L_(la,lb,4)}],P),
                 step_str(L{la}, 'L{la}', 'L{lb}', S_),
                 f(G1, G2,
@@ -199,6 +199,40 @@ def lanes_to_freecells(num_lanes, num_freecells, concise=True):
     return "\n".join(res)
 
 code = """
+clr(ht, red).
+clr(dd, red).
+clr(sd, black).
+clr(cb, black).
+
+goal_suit(1, ht).
+goal_suit(2, sd).
+
+can_add_to_goal(Goal,Card1,Card0) :-
+    Card1 \= b,
+    Card1 = c(R1,S1),
+    goal_suit(Goal,S1),
+    (
+        (Card0 = b, R1 = 1);
+        (
+            Card0 \= b,
+            Card0 = c(R0,_),
+            R1 =:= R0 + 1
+        )
+    ),!.
+
+can_add_to_lane(Card1,Card0) :-
+    Card1 \= b,
+    Card1 = c(R1,S1),
+    (
+        (Card0 = b);
+        (
+            Card0 \= b,
+            Card0 = c(R0,S0),
+            R1 + 1 =:= R0,
+            clr(S1,Clr1), clr(S0,Clr0), Clr1 \= Clr0
+        )
+    ),!.
+
 fc(L1,L2,L3,L4,S) :-
     append(L1,[b],L1_),
     append(L2,[b],L2_),
@@ -219,7 +253,8 @@ fc(L1,L2,L3,L4,S) :-
 % P_ for Past states accumulator
 
 step_str(Val, From, To, Str) :-
-    atomic_list_concat([Val,':',From,'-',To], Str).
+    term_to_atom(Val,ValStr),
+    atomic_list_concat([ValStr,':',From,'-',To], Str).
 
 % done
 % f(
