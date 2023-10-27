@@ -21,10 +21,10 @@ code generation and `test.py` for the testing.
 
 represents:
 
-L1:      L2:      L3:      L4:
-c(3,sd)  c(5,ht)  c(1,ht)  c(2,ht)
-c(2,sd)  c(6,sd)  c(5,sd)  c(3,ht)
-c(6,ht)  c(4,ht)  c(1,sd)  c(4,sd)
+L1:  L2:  L3:  L4:
+♠3   ♥️5   ♥️A   ♥️2
+♠2   ♠6   ♠5   ♥️3
+♥️6   ♥️4   ♠A   ♠4
 ```
 ```
 ➜ swipl -g 'fc([c(6,ht), c(2,sd), c(3,sd)], [c(4,ht), c(6,sd), c(5,ht)],
