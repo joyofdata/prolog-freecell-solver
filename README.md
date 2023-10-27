@@ -14,37 +14,44 @@ code generation and `test.py` for the testing.
 
 
 ```
-[7,4,1,6,1],[3,5,2],[6,4,3,2],[5,7] represents:
+[c(6,ht), c(2,sd), c(3,sd)],
+[c(4,ht), c(6,sd), c(5,ht)],
+[c(1,sd), c(5,sd), c(1,ht)],
+[c(4,sd), c(3,ht), c(2,ht)]
 
-L1:  L2:  L3:  L4:
-1    2    2    7
-6    5    3    5
-1    3    4
-4         6
-7         
+represents:
+
+L1:      L2:      L3:      L4:
+c(3,sd)  c(5,ht)  c(1,ht)  c(2,ht)
+c(2,sd)  c(6,sd)  c(5,sd)  c(3,ht)
+c(6,ht)  c(4,ht)  c(1,sd)  c(4,sd)
 ```
 ```
-➜ swipl -g 'fc([7,4,1,6,1],[3,5,2],[6,4,3,2],[5,7],S),writeln(S)' -t halt freecell.pl 
+➜ swipl -g 'fc([c(6,ht), c(2,sd), c(3,sd)], [c(4,ht), c(6,sd), c(5,ht)],
+    [c(1,sd), c(5,sd), c(1,ht)], [c(4,sd), c(3,ht), c(2,ht)], S), writeln(S)' \
+    -t halt freecell.pl
 
-[6:L3-L1,3:L2-L3,5:L2-L1,2:L2-L3,5:L1-L2,5:L4-L1,5:L1-F1,6:L1-L4,5:F1-L4,7:L1-F1,
-4:L1-L2,1:L1-G1,2:L3-G1,3:L3-G1,4:L2-G1,5:L2-G1,6:L1-G1,7:F1-G1,1:L1-G2,4:L3-L1,
-4:L1-L2,4:L2-L4,3:L3-L1,2:L3-G2,3:L1-G2,4:L4-G2,5:L4-G2,6:L4-G2,7:L4-G2]
+[c(1,sd):L3-G2,c(4,ht):L2-L3,c(6,ht):L1-F1,c(2,sd):L1-G2,c(3,sd):L1-G2,
+c(4,sd):L4-G2,c(6,ht):F1-L1,c(6,sd):L2-F1,c(6,ht):L1-F2,c(6,sd):F1-L1,
+c(5,ht):L2-L1,c(6,ht):F2-L2,c(5,ht):L1-F1,c(6,sd):L1-F2,c(5,ht):F1-L1,
+c(6,ht):L2-F1,c(6,sd):F2-L2,c(5,ht):L1-L2,c(6,ht):F1-L1,c(5,ht):L2-F1,
+...]
 ```
 ```
 ➜ python3 test.py
 
-PPredicate Call:  fc([7, 4, 1, 6, 1], [3, 5, 2], [6, 4, 3, 2], [5, 7], S)
-Solution:  [6:L3-L1,3:L2-L3,5:L2-L1,2:L2-L3,5:L1-L2,5:L4-L1,5:L1-F1,6:L1-L4,
-5:F1-L4,7:L1-F1,4:L1-L2,1:L1-G1,2:L3-G1,3:L3-G1,4:L2-G1,5:L2-G1,6:L1-G1,7:F1-G1,
-1:L1-G2,4:L3-L1,4:L1-L2,4:L2-L4,3:L3-L1,2:L3-G2,3:L1-G2,4:L4-G2,5:L4-G2,6:L4-G2,
-7:L4-G2]
+Predicate Call:  fc([c(6,sd), c(5,sd), c(3,ht)], [c(4,ht), c(5,ht), c(1,ht)],
+    [c(2,sd), c(6,ht), c(1,sd)], [c(4,sd), c(3,sd), c(2,ht)], S)
+Solution:  [c(6,sd):L1-F1,c(4,ht):L2-L1,c(4,sd):L4-L2,c(3,sd):L4-L1,
+c(2,ht):L4-L1,c(6,sd):F1-L4,c(2,ht):L1-F1,c(4,sd):L2-F2,c(2,ht):F1-L1,
+c(5,ht):L2-L4,c(1,ht):L2-G1,c(2,ht):L1-G1,c(4,sd):F2-L2,c(4,sd):L2-L4,...]
 SUCCESS
 
-Predicate Call:  fc([3, 2, 1, 7], [5, 7, 4, 6, 2], [5, 4, 1], [6, 3], S)
-Solution:  [5:L2-L4,3:L1-F1,2:L1-F2,1:L1-G1,2:F2-G1,3:F1-G1,7:L1-F1,7:L2-L1,
-4:L2-G1,5:L3-G1,6:L2-G1,7:F1-G1,4:L3-L4,1:L3-G2,2:L2-G2,7:L1-L2,7:L2-L1,7:L1-L3,
-4:L4-L1,4:L1-L2,7:L3-L1,4:L2-L3,7:L1-L2,4:L3-L1,5:L4-L3,4:L1-L3,7:L2-L1,4:L3-L2,
-6:L4-L1,3:L4-G2,4:L2-G2,5:L3-G2,6:L1-G2,7:L1-G2]
+Predicate Call:  fc([c(6,ht), c(2,sd), c(3,sd)], [c(4,ht), c(6,sd), c(5,ht)],
+    [c(1,sd), c(5,sd), c(1,ht)], [c(4,sd), c(3,ht), c(2,ht)], S)
+Solution:  [c(1,sd):L3-G2,c(4,ht):L2-L3,c(6,ht):L1-F1,c(2,sd):L1-G2,
+c(3,sd):L1-G2,c(4,sd):L4-G2,c(6,ht):F1-L1,c(6,sd):L2-F1,c(6,ht):L1-F2,
+c(6,sd):F1-L1,c(5,ht):L2-L1,c(6,ht):F2-L2,c(5,ht):L1-F1,c(6,sd):L1-F2,...]
 SUCCESS
 ```
 
@@ -54,7 +61,5 @@ SUCCESS
 - ~~generate rules~~
 - ~~first test suite~~
 - ~~four lanes~~
-- introduce two colors
+- ~~introduce two colors~~
 - full game
-- switch prolog invocation to pyswip
-- pytest for testing
