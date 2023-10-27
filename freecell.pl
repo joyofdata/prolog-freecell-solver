@@ -6,8 +6,6 @@ clr(cb, black).
 
 goal_suit(1, ht).
 goal_suit(2, sd).
-%goal_suit(3, sd).
-%goal_suit(4, cb).
 
 can_add_to_goal(Goal,Card1,Card0) :-
     Card1 \= b,
