@@ -81,7 +81,7 @@ def lanes_to_goals(num_goals, num_lanes, concise=True):
                 f({G_(g,l,1)}, {G_(g,l,2)},
                     F1, F2,
                     {L_(l,1)}, {L_(l,2)}, {L_(l,3)}, {L_(l,4)},
-                    S, [[{L_(l,1)},{L_(l,2)},{L_(l,3),{L_(l,4)}}]|P], P_
+                    S, [[{L_(l,1)},{L_(l,2)},{L_(l,3)},{L_(l,4)}]|P], P_
                 ),!.
             """
             res.append(re.sub("\n            ","\n",res0).lstrip())
