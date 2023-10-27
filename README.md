@@ -21,7 +21,7 @@ code generation and `test.py` for the testing.
 
 represents:
 
-L1:   L2:    L3:    L4:
+L1:   L2:   L3:   L4:
 ♠️3   ♥️5   ♥️A   ♥️2
 ♠️2   ♠️6   ♠️5   ♥️3
 ♥️6   ♥️4   ♠️A   ♠️4
