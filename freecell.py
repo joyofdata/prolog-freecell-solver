@@ -39,7 +39,7 @@ def freecells_to_goals(num_goals, num_freecells, concise=True):
     for g in range(1,num_goals+1):
         for f in range(1,num_freecells+1):
             res0 = f"""
-            f({G(g,1)}, {G(g,2)}, {G(g,3)}, {G(g,4)},                                   % F{f} to G{g}
+            f({G(g,1)}, {G(g,2)}, {G(g,3)}, {G(g,4)},                           % F{f} to G{g}
                 {F(f,1)}, {F(f,2)}, {F(f,3)}, {F(f,4)},
                 L1, L2, L3, L4, L5, L6, L7, L8,
                 [S_|S], P, P_
@@ -49,7 +49,7 @@ def freecells_to_goals(num_goals, num_freecells, concise=True):
                 f({G_(f,g,1)}, {G_(f,g,2)}, {G_(f,g,3)}, {G_(f,g,4)},
                     {F_(f,1)}, {F_(f,2)}, {F_(f,3)}, {F_(f,4)},
                     L1, L2, L3, L4, L5, L6, L7, L8,
-                    S, [[L1,L2,L3,L4,L5,L6,L7,L8]|P], P_                  % steps and known states
+                    S, [[L1,L2,L3,L4,L5,L6,L7,L8]|P], P_      % steps and known states
                 ),!.
             """
             res.append(re.sub("\n            ","\n",res0).lstrip())
@@ -103,14 +103,14 @@ def freecells_to_lanes(num_freecells, num_lanes, concise=True):
     for f in range(1,num_freecells+1):
         for l in range(1,num_lanes+1):
             res0 = f"""
-            f(G1, G2, G3, G4,                                  % F{f} to L{l}
+            f(G1, G2, G3, G4,                                      % F{f} to L{l}
                 {F(f,1)}, {F(f,2)}, {F(f,3)}, {F(f,4)},
                 {L(l,1)}, {L(l,2)}, {L(l,3)}, {L(l,4)}, {L(l,5)}, {L(l,6)}, {L(l,7)}, {L(l,8)},
                 [S_|S], P, P_
             ) :-
                 can_add_to_lane(F{f},L{l}),
                 \+ member([{L_(f,l,1)},{L_(f,l,2)},{L_(f,l,3)},{L_(f,l,4)},{L_(f,l,5)},{L_(f,l,6)},{L_(f,l,7)},{L_(f,l,8)}],P),   % avoid repeated state
-                step_str(F{f}, 'F{f}', 'L{l}', S_),          % step string
+                step_str(F{f}, 'F{f}', 'L{l}', S_),                      % step string
                 f(G1, G2, G3, G4,
                     {F_(f,1)}, {F_(f,2)}, {F_(f,3)}, {F_(f,4)},
                     {L_(f,l,1)}, {L_(f,l,2)}, {L_(f,l,3)}, {L_(f,l,4)}, {L_(f,l,5)}, {L_(f,l,6)}, {L_(f,l,7)}, {L_(f,l,8)},

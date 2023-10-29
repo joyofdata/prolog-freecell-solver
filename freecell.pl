@@ -68,17 +68,17 @@ f(_,_,_,_,[],[],[],[],[b],[b],[b],[b],[b],[b],[b],[b],[],P,P).
 % freecells to goals
 % ------------------------------------------------------------------------------
 
-f([G1|G1s], G2, G3, G4,                                   % F1 to G1
+f([G1|G1s], G2, G3, G4,                           % F1 to G1
     [F1], F2, F3, F4,
     L1, L2, L3, L4, L5, L6, L7, L8,
     [S_|S], P, P_
 ) :-
     can_add_to_goal(1,F1,G1),
     step_str(F1, 'F1', 'G1', S_),                 % string describing step
-    f([F1,G1|G1s], G2, G3, G4, 
+    f([F1,G1|G1s], G2, G3, G4,
         [], F2, F3, F4,
         L1, L2, L3, L4, L5, L6, L7, L8,
-        S, [[L1,L2,L3,L4,L5,L6,L7,L8]|P], P_                  % steps and known states
+        S, [[L1,L2,L3,L4,L5,L6,L7,L8]|P], P_      % steps and known states
     ),!.
 
 f([G1|G1s], G2, G3, G4, F1, [F2], F3, F4, L1, L2, L3, L4, L5, L6, L7, L8, [S_|S], P, P_):-can_add_to_goal(1, F2, G1), step_str(F2, 'F2', 'G1', S_), f([F2, G1|G1s], G2, G3, G4, F1, [], F3, F4, L1, L2, L3, L4, L5, L6, L7, L8, S, [[L1, L2, L3, L4, L5, L6, L7, L8]|P], P_), !.
@@ -150,14 +150,14 @@ f(G1, G2, G3, [G4|G4s], F1, F2, F3, F4, L1, L2, L3, L4, L5, L6, L7, [L8|L8s], [S
 % freecells to lanes
 % ------------------------------------------------------------------------------
 
-f(G1, G2, G3, G4,                                  % F1 to L1
+f(G1, G2, G3, G4,                                      % F1 to L1
     [F1], F2, F3, F4,
     [L1|L1s], L2, L3, L4, L5, L6, L7, L8,
     [S_|S], P, P_
 ) :-
     can_add_to_lane(F1,L1),
     \+ member([[F1,L1|L1s],L2,L3,L4,L5,L6,L7,L8],P),   % avoid repeated state
-    step_str(F1, 'F1', 'L1', S_),          % step string
+    step_str(F1, 'F1', 'L1', S_),                      % step string
     f(G1, G2, G3, G4,
         [], F2, F3, F4,
         [F1,L1|L1s], L2, L3, L4, L5, L6, L7, L8,
