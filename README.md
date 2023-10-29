@@ -38,7 +38,7 @@ L1:   L2:   L3:   L4:
 [c(7,ht), c(9,sd), c(7,sd), c(9,dd), c(11,dd), c(13,sd)]
 , S),write(S)' -t halt freecell.pl > solution_1.txt
 ```
-[solution_1.txt](solution_1,txt)
+[solution_1.txt](solution_1.txt)
 
 ```
 ➜ python3 test.py
