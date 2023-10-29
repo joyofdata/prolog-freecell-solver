@@ -16,9 +16,9 @@ import itertools as it
 
 # not sufficient to configure those numbers.
 # manual editing is still required.
-NUM_LANES = 4
-NUM_GOALS = 2
-NUM_FREECELLS = 2
+NUM_LANES = 8
+NUM_GOALS = 4
+NUM_FREECELLS = 4
 
 
 def _concise_format(res):
@@ -39,17 +39,17 @@ def freecells_to_goals(num_goals, num_freecells, concise=True):
     for g in range(1,num_goals+1):
         for f in range(1,num_freecells+1):
             res0 = f"""
-            f({G(g,1)}, {G(g,2)},                                   % F{f} to G{g}
-                {F(f,1)}, {F(f,2)},
-                L1, L2, L3, L4,
+            f({G(g,1)}, {G(g,2)}, {G(g,3)}, {G(g,4)},                                   % F{f} to G{g}
+                {F(f,1)}, {F(f,2)}, {F(f,3)}, {F(f,4)},
+                L1, L2, L3, L4, L5, L6, L7, L8,
                 [S_|S], P, P_
             ) :-
                 can_add_to_goal({g},F{f},G{g}),
                 step_str(F{f}, 'F{f}', 'G{g}', S_),                 % string describing step
-                f({G_(f,g,1)}, {G_(f,g,2)},
-                    {F_(f,1)}, {F_(f,2)},
-                    L1, L2, L3, L4,
-                    S, [[L1,L2,L3,L4]|P], P_                  % steps and known states
+                f({G_(f,g,1)}, {G_(f,g,2)}, {G_(f,g,3)}, {G_(f,g,4)},
+                    {F_(f,1)}, {F_(f,2)}, {F_(f,3)}, {F_(f,4)},
+                    L1, L2, L3, L4, L5, L6, L7, L8,
+                    S, [[L1,L2,L3,L4,L5,L6,L7,L8]|P], P_                  % steps and known states
                 ),!.
             """
             res.append(re.sub("\n            ","\n",res0).lstrip())
@@ -71,17 +71,17 @@ def lanes_to_goals(num_goals, num_lanes, concise=True):
     for g in range(1,num_goals+1):
         for l in range(1,num_lanes+1):
             res0 = f"""
-            f({G(g,1)}, {G(g,2)},                                   % L{l} to G{g}
-                F1, F2,
-                {L(l,1)}, {L(l,2)}, {L(l,3)}, {L(l,4)},
+            f({G(g,1)}, {G(g,2)}, {G(g,3)}, {G(g,4)},                                   % L{l} to G{g}
+                F1, F2, F3, F4,
+                {L(l,1)}, {L(l,2)}, {L(l,3)}, {L(l,4)}, {L(l,5)}, {L(l,6)}, {L(l,7)}, {L(l,8)},
                 [S_|S], P, P_
             ) :-
                 can_add_to_goal({g},L{l},G{g}),
                 step_str(L{l}, 'L{l}', 'G{g}', S_),
-                f({G_(g,l,1)}, {G_(g,l,2)},
-                    F1, F2,
-                    {L_(l,1)}, {L_(l,2)}, {L_(l,3)}, {L_(l,4)},
-                    S, [[{L_(l,1)},{L_(l,2)},{L_(l,3)},{L_(l,4)}]|P], P_
+                f({G_(g,l,1)}, {G_(g,l,2)}, {G_(g,l,3)}, {G_(g,l,4)},
+                    F1, F2, F3, F4,
+                    {L_(l,1)}, {L_(l,2)}, {L_(l,3)}, {L_(l,4)}, {L_(l,5)}, {L_(l,6)}, {L_(l,7)}, {L_(l,8)},
+                    S, [[{L_(l,1)},{L_(l,2)},{L_(l,3)},{L_(l,4)},{L_(l,5)},{L_(l,6)},{L_(l,7)},{L_(l,8)}]|P], P_
                 ),!.
             """
             res.append(re.sub("\n            ","\n",res0).lstrip())
@@ -103,18 +103,18 @@ def freecells_to_lanes(num_freecells, num_lanes, concise=True):
     for f in range(1,num_freecells+1):
         for l in range(1,num_lanes+1):
             res0 = f"""
-            f(G1, G2,                                  % F{f} to L{l}
-                {F(f,1)}, {F(f,2)},
-                {L(l,1)}, {L(l,2)}, {L(l,3)}, {L(l,4)},
+            f(G1, G2, G3, G4,                                  % F{f} to L{l}
+                {F(f,1)}, {F(f,2)}, {F(f,3)}, {F(f,4)},
+                {L(l,1)}, {L(l,2)}, {L(l,3)}, {L(l,4)}, {L(l,5)}, {L(l,6)}, {L(l,7)}, {L(l,8)},
                 [S_|S], P, P_
             ) :-
                 can_add_to_lane(F{f},L{l}),
-                \+ member([{L_(f,l,1)},{L_(f,l,2)},{L_(f,l,3)},{L_(f,l,4)}],P),   % avoid repeated state
+                \+ member([{L_(f,l,1)},{L_(f,l,2)},{L_(f,l,3)},{L_(f,l,4)},{L_(f,l,5)},{L_(f,l,6)},{L_(f,l,7)},{L_(f,l,8)}],P),   % avoid repeated state
                 step_str(F{f}, 'F{f}', 'L{l}', S_),          % step string
-                f(G1, G2,
-                    {F_(f,1)}, {F_(f,2)},
-                    {L_(f,l,1)}, {L_(f,l,2)}, {L_(f,l,3)}, {L_(f,l,4)},
-                    S, [[{L_(f,l,1)},{L_(f,l,2)},{L_(f,l,3)},{L_(f,l,4)}]|P], P_
+                f(G1, G2, G3, G4,
+                    {F_(f,1)}, {F_(f,2)}, {F_(f,3)}, {F_(f,4)},
+                    {L_(f,l,1)}, {L_(f,l,2)}, {L_(f,l,3)}, {L_(f,l,4)}, {L_(f,l,5)}, {L_(f,l,6)}, {L_(f,l,7)}, {L_(f,l,8)},
+                    S, [[{L_(f,l,1)},{L_(f,l,2)},{L_(f,l,3)},{L_(f,l,4)},{L_(f,l,5)},{L_(f,l,6)},{L_(f,l,7)},{L_(f,l,8)}]|P], P_
                 ).
             """
             res.append(re.sub("\n            ","\n",res0).lstrip())
@@ -144,18 +144,18 @@ def lanes_to_lanes(num_lanes, concise=True):
                 continue
 
             res0 = f"""
-            f(G1, G2,                               % L{la} to L{lb}
-                F1, F2,
-                {L(la,lb,1)}, {L(la,lb,2)}, {L(la,lb,3)}, {L(la,lb,4)},
+            f(G1, G2, G3, G4,                               % L{la} to L{lb}
+                F1, F2, F3, F4,
+                {L(la,lb,1)}, {L(la,lb,2)}, {L(la,lb,3)}, {L(la,lb,4)}, {L(la,lb,5)}, {L(la,lb,6)}, {L(la,lb,7)}, {L(la,lb,8)},
                 [S_|S], P, P_
             ) :-
                 can_add_to_lane(L{la},L{lb}),
-                \+ member([{L_(la,lb,1)},{L_(la,lb,2)},{L_(la,lb,3)},{L_(la,lb,4)}],P),
+                \+ member([{L_(la,lb,1)},{L_(la,lb,2)},{L_(la,lb,3)},{L_(la,lb,4)},{L_(la,lb,5)},{L_(la,lb,6)},{L_(la,lb,7)},{L_(la,lb,8)}],P),
                 step_str(L{la}, 'L{la}', 'L{lb}', S_),
-                f(G1, G2,
-                    F1, F2,
-                    {L_(la,lb,1)}, {L_(la,lb,2)}, {L_(la,lb,3)}, {L_(la,lb,4)},
-                    S, [[{L_(la,lb,1)},{L_(la,lb,2)},{L_(la,lb,3)},{L_(la,lb,4)}]|P], P_
+                f(G1, G2, G3, G4,
+                    F1, F2, F3, F4,
+                    {L_(la,lb,1)}, {L_(la,lb,2)}, {L_(la,lb,3)}, {L_(la,lb,4)}, {L_(la,lb,5)}, {L_(la,lb,6)}, {L_(la,lb,7)}, {L_(la,lb,8)},
+                    S, [[{L_(la,lb,1)},{L_(la,lb,2)},{L_(la,lb,3)},{L_(la,lb,4)},{L_(la,lb,5)},{L_(la,lb,6)},{L_(la,lb,7)},{L_(la,lb,8)}]|P], P_
                 ).
             """
             res.append(re.sub("\n            ","\n",res0).lstrip())
@@ -177,18 +177,18 @@ def lanes_to_freecells(num_lanes, num_freecells, concise=True):
     for l in range(1,num_lanes+1):
         for f in range(1,num_freecells+1):
             res0 = f"""
-            f(G1, G2,                           % L{l} to F{f}
-                {F(f,1)}, {F(f,2)},
-                {L(l,1)}, {L(l,2)}, {L(l,3)}, {L(l,4)},
+            f(G1, G2, G3, G4,                          % L{l} to F{f}
+                {F(f,1)}, {F(f,2)}, {F(f,3)}, {F(f,4)},
+                {L(l,1)}, {L(l,2)}, {L(l,3)}, {L(l,4)}, {L(l,5)}, {L(l,6)}, {L(l,7)}, {L(l,8)},
                 [S_|S], P, P_
             ) :-
                 L{l} \= b,
-                \+ member([{L_(l,1)},{L_(l,2)},{L_(l,3)},{L_(l,4)}],P),
+                \+ member([{L_(l,1)},{L_(l,2)},{L_(l,3)},{L_(l,4)},{L_(l,5)},{L_(l,6)},{L_(l,7)},{L_(l,8)}],P),
                 step_str(L{l}, 'L{l}', 'F{f}', S_),
-                f(G1, G2,
-                    {F_(f,l,1)}, {F_(f,l,2)},
-                    {L_(l,1)}, {L_(l,2)}, {L_(l,3)}, {L_(l,4)},
-                    S, [[{L_(l,1)},{L_(l,2)},{L_(l,3)},{L_(l,4)}]|P], P_
+                f(G1, G2, G3, G4,
+                    {F_(f,l,1)}, {F_(f,l,2)}, {F_(f,l,3)}, {F_(f,l,4)},
+                    {L_(l,1)}, {L_(l,2)}, {L_(l,3)}, {L_(l,4)}, {L_(l,5)}, {L_(l,6)}, {L_(l,7)}, {L_(l,8)},
+                    S, [[{L_(l,1)},{L_(l,2)},{L_(l,3)},{L_(l,4)},{L_(l,5)},{L_(l,6)},{L_(l,7)},{L_(l,8)}]|P], P_
                 ).
             """
             res.append(re.sub("\n            ","\n",res0).lstrip())
@@ -204,8 +204,10 @@ clr(dd, red).
 clr(sd, black).
 clr(cb, black).
 
-goal_suit(1, ht).
-goal_suit(2, sd).
+goal_suit(1, dd).
+goal_suit(2, ht).
+goal_suit(3, sd).
+goal_suit(4, cb).
 
 can_add_to_goal(Goal,Card1,Card0) :-
     Card1 \= b,
@@ -233,21 +235,21 @@ can_add_to_lane(Card1,Card0) :-
         )
     ),!.
 
-fc(L1,L2,L3,L4,S) :-
+fc(L1,L2,L3,L4,L5,L6,L7,L8,S) :-
     append(L1,[b],L1_),
     append(L2,[b],L2_),
     append(L3,[b],L3_),
     append(L4,[b],L4_),
-    f([b],[b],[],[],L1_,L2_,L3_,L4_,S,[],_).
+    append(L5,[b],L5_),
+    append(L6,[b],L6_),
+    append(L7,[b],L7_),
+    append(L8,[b],L8_),
 
-% G1 for Goal 1 [n,n-1,...,1]
-% G2 for Goal 2 [k,k-1,...,1]
-% F1 for Free Cell 1 [m]
-% F2 for Free Cell 2 [m]
-% L1 for Lane 1 [l1_1,...,l1_k]
-% L2 for Lane 2 [l2_1,...,l2_l]
-% L3 for Lane 3 [l3_1,...,l3_l]
-% L4 for Lane 4 [l4_1,...,l4_l]
+    f([b],[b],[b],[b],[],[],[],[],L1_,L2_,L3_,L4_,L5_,L6_,L7_,L8_,S,[],_).
+
+% G# for Goal # [n,n-1,...,1]
+% F# for Free Cell # [m]
+% L# for Lane # [l#_1,...,l#_k]
 % S for Solution
 % P for Past states
 % P_ for Past states accumulator
@@ -258,9 +260,9 @@ step_str(Val, From, To, Str) :-
 
 % done
 % f(
-%   G1, G2, F1, F2, L1, L2, L3, L4, S, P, P_)
+%   G1, G2, G3, G4, F1, F2, F3, F4, L1, L2, L3, L4, L5, L6, L7, L8, S, P, P_)
 % )
-f(_,_,[],[],[b],[b],[b],[b],[],P,P).
+f(_,_,_,_,[],[],[],[],[b],[b],[b],[b],[b],[b],[b],[b],[],P,P).
 
 % ==============================================================================
 % freecells to goals
